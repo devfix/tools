@@ -1,0 +1,11 @@
+#!/bin/bash
+
+function build_cmake_release() {
+  project="$1"
+  build_dir="$project/cmake-build-release"
+  cmake -DCMAKE_BUILD_TYPE=Release -S randomator/ -B "$build_dir"
+  cmake --build "$build_dir" --config Release
+  sudo cmake --build "$build_dir" --config Release --target install
+}
+
+build_cmake_release "randomator"
