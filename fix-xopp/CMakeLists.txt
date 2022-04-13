@@ -29,6 +29,7 @@ set(TARGET fix-xopp)
 add_executable(${TARGET} main.cpp)
 set(CMAKE_EXE_LINKER_FLAGS "-static-libgcc -static-libstdc++")
 set_target_properties(${TARGET} PROPERTIES LINK_SEARCH_START_STATIC 1)
+install(TARGETS ${TARGET} CONFIGURATIONS Release DESTINATION /usr/bin)
 
 
 #-----------------------------------------------------------------
@@ -40,7 +41,14 @@ FetchContent_Declare(
         URL https://github.com/zeux/pugixml/archive/refs/tags/v1.12.1.tar.gz
         URL_HASH SHA256=1e28ab24b6e04e013d96f45d25e9f2d04c921dc68c613fd010ecaaad3892c14d
 )
-FetchContent_MakeAvailable(pugixml_targz)
+
+# instead of FetchContent_MakeAvailable we use add_subdirectory with EXCLUDE_FROM_ALL
+FetchContent_GetProperties(pugixml_targz)
+if(NOT pugixml_targz_POPULATED)
+    FetchContent_Populate(pugixml_targz)
+    add_subdirectory(${pugixml_targz_SOURCE_DIR} EXCLUDE_FROM_ALL)
+endif()
+
 
 # add library to target
 target_include_directories(${TARGET} PRIVATE ${pugixml_targz_SOURCE_DIR}/src)
@@ -55,5 +63,7 @@ set(Boost_USE_STATIC_LIBS ON)
 set(Boost_USE_MULTITHREADED ON)
 set(Boost_USE_STATIC_RUNTIME ON)
 find_package(Boost COMPONENTS filesystem system context coroutine unit_test_framework REQUIRED)
+
+# add library to target
 target_include_directories(${TARGET} PRIVATE ${Boost_INCLUDE_DIRS})
 target_link_libraries(${TARGET} PRIVATE ${Boost_LIBRARIES} Boost::filesystem)

@@ -1,11 +1,18 @@
 #!/bin/bash
 
+if [ "$EUID" -eq 0 ]; then
+  echo "please do not run as root"
+  exit 1
+fi
+
+
 function build_cmake_release() {
   project="$1"
   build_dir="$project/cmake-build-release"
-  cmake -DCMAKE_BUILD_TYPE=Release -S randomator/ -B "$build_dir"
+  cmake -DCMAKE_BUILD_TYPE=Release -S "$project" -B "$build_dir"
   cmake --build "$build_dir" --config Release
   sudo cmake --build "$build_dir" --config Release --target install
 }
 
 build_cmake_release "randomator"
+build_cmake_release "fix-xopp"
