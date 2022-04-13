@@ -22,7 +22,7 @@ set(lnxfn_INCLUDE_DIRS ${INCLUDE_DIRS} PARENT_SCOPE)
 FetchContent_Declare(
         torquis_targz
         URL https://github.com/devfix/torquis/archive/refs/tags/v0.3.1.tar.gz
-        URL_HASH SHA256=a67fdfe0a8cbaaf3a67686e6c9dbbc81329570c7c4143ed9a58b3fe1c425049e
+        URL_HASH SHA256=9e210747944997f52ff4dddf883c4353b1c51d7243a4bd3858d74da12eec9ae7
 )
 FetchContent_MakeAvailable(torquis_targz)
 target_include_directories(lnxfn PRIVATE ${torquis_INCLUDE_DIRS})
