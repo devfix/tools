@@ -17,6 +17,8 @@ endif ()
 #-----------------------------------------------------------------
 project(fix_xopp)
 include(FetchContent)
+include(ExternalProject)
+set(FETCHCONTENT_QUIET false)
 set(CMAKE_CXX_STANDARD 23)
 set(TARGET fix-xopp)
 
@@ -34,16 +36,14 @@ set_target_properties(${TARGET} PROPERTIES LINK_SEARCH_START_STATIC 1)
 #-----------------------------------------------------------------
 message(STATUS "Loading pugixml")
 FetchContent_Declare(
-        pugixml_git
-        GIT_REPOSITORY https://github.com/zeux/pugixml.git
-        GIT_TAG v1.12.1
-        GIT_SHALLOW TRUE
-        GIT_PROGRESS TRUE
+        pugixml_targz
+        URL https://github.com/zeux/pugixml/archive/refs/tags/v1.12.1.tar.gz
+        URL_HASH SHA256=1e28ab24b6e04e013d96f45d25e9f2d04c921dc68c613fd010ecaaad3892c14d
 )
-FetchContent_MakeAvailable(pugixml_git)
+FetchContent_MakeAvailable(pugixml_targz)
 
 # add library to target
-target_include_directories(${TARGET} PRIVATE ${pugixml_git_SOURCE_DIR}/src)
+target_include_directories(${TARGET} PRIVATE ${pugixml_targz_SOURCE_DIR}/src)
 target_link_libraries(${TARGET} PRIVATE pugixml::pugixml)
 
 
@@ -54,6 +54,6 @@ message(STATUS "Loading boost")
 set(Boost_USE_STATIC_LIBS ON)
 set(Boost_USE_MULTITHREADED ON)
 set(Boost_USE_STATIC_RUNTIME ON)
-find_package(Boost COMPONENTS filesystem system REQUIRED)
+find_package(Boost COMPONENTS filesystem system context coroutine unit_test_framework REQUIRED)
 target_include_directories(${TARGET} PRIVATE ${Boost_INCLUDE_DIRS})
-target_link_libraries(${TARGET} PRIVATE ${Boost_LIBRARIES})
+target_link_libraries(${TARGET} PRIVATE ${Boost_LIBRARIES} Boost::filesystem)
