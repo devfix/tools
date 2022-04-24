@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.00)
+cmake_minimum_required(VERSION 3.14)
 
 
 #-----------------------------------------------------------------
@@ -23,9 +23,9 @@ set(CMAKE_CXX_STANDARD 20)
 #-----------------------------------------------------------------
 # add library boost
 #-----------------------------------------------------------------
-set(Boost_USE_STATIC_LIBS ON)
-set(Boost_USE_MULTITHREADED ON)
-set(Boost_USE_STATIC_RUNTIME ON)
+set(Boost_USE_STATIC_LIBS OFF)  # sad
+set(Boost_USE_MULTITHREADED OFF)
+set(Boost_USE_STATIC_RUNTIME OFF)  # sad
 find_package(Boost COMPONENTS program_options REQUIRED)
 include_directories(SYSTEM ${Boost_INCLUDE_DIRS})
 link_directories(${Boost_LIBRARY_DIR})

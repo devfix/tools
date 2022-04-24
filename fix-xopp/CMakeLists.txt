@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.20)
+cmake_minimum_required(VERSION 3.14)
 
 
 #-----------------------------------------------------------------
@@ -19,7 +19,7 @@ project(fix_xopp)
 include(FetchContent)
 include(ExternalProject)
 set(FETCHCONTENT_QUIET false)
-set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_STANDARD 20)
 set(TARGET fix-xopp)
 
 
@@ -27,8 +27,6 @@ set(TARGET fix-xopp)
 # create target
 #-----------------------------------------------------------------
 add_executable(${TARGET} main.cpp)
-set(CMAKE_EXE_LINKER_FLAGS "-static-libgcc -static-libstdc++")
-set_target_properties(${TARGET} PROPERTIES LINK_SEARCH_START_STATIC 1)
 install(TARGETS ${TARGET} CONFIGURATIONS Release DESTINATION /usr/bin)
 
 
@@ -59,11 +57,11 @@ target_link_libraries(${TARGET} PRIVATE pugixml::pugixml)
 # add library boost
 #-----------------------------------------------------------------
 message(STATUS "Loading boost")
-set(Boost_USE_STATIC_LIBS ON)
-set(Boost_USE_MULTITHREADED ON)
-set(Boost_USE_STATIC_RUNTIME ON)
-find_package(Boost COMPONENTS filesystem system context coroutine unit_test_framework REQUIRED)
+set(Boost_USE_STATIC_LIBS OFF)  # sad
+set(Boost_USE_MULTITHREADED OFF)
+set(Boost_USE_STATIC_RUNTIME OFF)  # sad
+find_package(Boost COMPONENTS filesystem  REQUIRED)
 
 # add library to target
 target_include_directories(${TARGET} PRIVATE ${Boost_INCLUDE_DIRS})
-target_link_libraries(${TARGET} PRIVATE ${Boost_LIBRARIES} Boost::filesystem)
+target_link_libraries(${TARGET} PRIVATE ${Boost_LIBRARIES} Boost::filesystem pthread)
