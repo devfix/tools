@@ -1,0 +1,17 @@
+#!/bin/bash
+tmp="/tmp/msoffice2pdf"
+mkdir -p "$tmp"
+[[ $(ls -1 "$tmp" | wc -l) -gt 0 ]] && echo "Script still active or previous run failed. If the latter is the case, please delete $tmp" && exit 1
+
+function libreoffice2pdf
+{
+    in="$1"
+    out="${in%.*}.pdf"
+    libreoffice --convert-to pdf --outdir "$tmp" "$in"
+    mv "$tmp/$(ls "$tmp")" "$out"
+    [[ $(du -b "$out" | cut -f1) -gt 10000 ]] && rm "$in"
+}
+
+find . -name "*.ppt" -or -name "*.pptx" -or -name "*.doc" -or -name "*.docx" | while read f; do libreoffice2pdf "$f"; done
+
+rm -r "$tmp"
