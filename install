@@ -1,0 +1,3 @@
+#!/bin/bash
+
+sudo ln -sr scripts/msoffice2pdf /usr/local/bin/msoffice2pdf
